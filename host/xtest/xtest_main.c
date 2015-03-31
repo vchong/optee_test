@@ -114,7 +114,7 @@ ADBG_SUITE_ENTRY(XTEST_TEE_BENCHMARK_1003, NULL)
 ADBG_SUITE_DEFINE_END()
 
 static const char gdevname_tz[] = "opteearmtz00";
-char *_device = (char *)gdevname_tz;
+char *_device = NULL;
 unsigned int level = 0;
 static const char glevel[] = "0";
 static const char gsuitename[] = "regression";

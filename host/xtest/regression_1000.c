@@ -33,6 +33,7 @@
 #include <sdp_basic.h>
 
 static void xtest_tee_test_1001(ADBG_Case_t *Case_p);
+static void xtest_tee_test_1002(ADBG_Case_t *Case_p);
 static void xtest_tee_test_1004(ADBG_Case_t *Case_p);
 static void xtest_tee_test_1005(ADBG_Case_t *Case_p);
 static void xtest_tee_test_1006(ADBG_Case_t *Case_p);
@@ -49,6 +50,7 @@ static void xtest_tee_test_1014(ADBG_Case_t *Case_p);
 static void xtest_tee_test_1015(ADBG_Case_t *Case_p);
 
 ADBG_CASE_DEFINE(regression, 1001, xtest_tee_test_1001, "Core self tests");
+ADBG_CASE_DEFINE(regression, 1002, xtest_tee_test_1002, "SPI self tests");
 ADBG_CASE_DEFINE(regression, 1004, xtest_tee_test_1004, "Test User Crypt TA");
 ADBG_CASE_DEFINE(regression, 1005, xtest_tee_test_1005, "Many sessions");
 ADBG_CASE_DEFINE(regression, 1006, xtest_tee_test_1006,
@@ -282,6 +284,28 @@ static void xtest_tee_test_1001(ADBG_Case_t *c)
 
 	(void)ADBG_EXPECT_TEEC_SUCCESS(c, TEEC_InvokeCommand(
 		&session, PTA_INVOKE_TESTS_CMD_SELF_TESTS, NULL, &ret_orig));
+	TEEC_CloseSession(&session);
+}
+
+static void xtest_tee_test_1002(ADBG_Case_t *c)
+{
+	TEEC_Result res;
+	TEEC_Session session = { 0 };
+	uint32_t ret_orig;
+
+#define CMD_RUN_SPI_TST2 3
+
+	res = xtest_teec_open_session(&session, &sta_test_ta_uuid, NULL,
+				      &ret_orig);
+	/*
+	 * If the static TA (which is optional) isn't available, skip this
+	 * test.
+	 */
+	if (res != TEEC_SUCCESS)
+		return;
+
+	(void)ADBG_EXPECT_TEEC_SUCCESS(c, TEEC_InvokeCommand(
+		&session, CMD_RUN_SPI_TST2, NULL, &ret_orig));
 	TEEC_CloseSession(&session);
 }
 

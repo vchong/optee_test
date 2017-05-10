@@ -48,6 +48,11 @@ ta:
 .PHONY: clean
 ifneq ($(wildcard $(TA_DEV_KIT_DIR)/host_include/conf.mk),)
 clean:
+	@#echo "cleanfiles = $(cleanfiles)"
+	@echo "xtest: O = $(O)"
+	@echo "xtest: out-dir = $(out-dir)"
+	@echo "xtest: link-out-dir = $(link-out-dir)"
+	@echo "xtest: base-prefix = $(base-prefix)"
 	$(q)$(MAKE) -C host/xtest O=$(out-dir) $@
 	$(q)$(MAKE) -C ta O=$(out-dir) $@
 else

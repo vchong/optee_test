@@ -53,7 +53,7 @@ endif
 all: ta
 
 .PHONY: ta
-ta: 
+ta:
 	$(q)$(foreach dir,$(TA_DIRS), $(MAKE) -C $(dir) O=$(out-dir)/ta/$(dir) &&) true
 
 # remove build directories including ta/<ta-name>/ directories.
@@ -65,5 +65,8 @@ endef
 
 .PHONY: clean
 clean:
+	@echo "ta: O = $(O)"
+	@echo "ta: out-dir = $(out-dir)"
+	@echo "ta: dir = $(dir)"
 	$(q)$(foreach dir,$(TA_DIRS), [ ! -d $(dir) ] || $(MAKE) -C $(dir) O=$(out-dir)/ta/$(dir) $@ &&) true
 	$(q)$(foreach dir,$(TA_DIRS), $(call rm-build-subdir,$(dir));)

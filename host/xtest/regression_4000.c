@@ -4370,6 +4370,7 @@ static void xtest_test_keygen_noparams(ADBG_Case_t *c, TEEC_Session *session)
 		uint32_t min_size;
 		uint32_t max_size;
 	} key_types[] = {
+#if 0
 		{ 0, "AES", TEE_TYPE_AES, 64, 128,
 		  256 /* valid sizes 128, 192, 256 */ },
 		{ 0, "DES", TEE_TYPE_DES, 56, 56, 56 /* valid size 56 */ },
@@ -4392,6 +4393,13 @@ static void xtest_test_keygen_noparams(ADBG_Case_t *c, TEEC_Session *session)
 		{ 1, "RSA-768", TEE_TYPE_RSA_KEYPAIR, 1, 768, 768 },
 		{ 1, "RSA-896", TEE_TYPE_RSA_KEYPAIR, 1, 896, 896 },
 		{ 1, "RSA-1024", TEE_TYPE_RSA_KEYPAIR, 1, 1024, 1024 },
+#endif
+
+		/* New tests to check big RSA key sizes */
+		{ 0, "RSA-1024", TEE_TYPE_RSA_KEYPAIR, 1, 1024, 1024 },
+		{ 0, "RSA-2048", TEE_TYPE_RSA_KEYPAIR, 1, 2048, 2048 },
+		{ 0, "RSA-3072", TEE_TYPE_RSA_KEYPAIR, 1, 3072, 3072 },
+		{ 0, "RSA-4096", TEE_TYPE_RSA_KEYPAIR, 1, 4096, 4096 },
 	};
 
 	for (n = 0; n < ARRAY_SIZE(key_types); n++) {
@@ -4662,11 +4670,11 @@ static void xtest_tee_test_4007(ADBG_Case_t *c)
 
 	xtest_test_keygen_noparams(c, &session);
 
-	xtest_test_keygen_dh(c, &session);
+	//xtest_test_keygen_dh(c, &session);
 
-	xtest_test_keygen_dsa(c, &session);
+	//xtest_test_keygen_dsa(c, &session);
 
-	xtest_test_keygen_ecc (c, &session);
+	//xtest_test_keygen_ecc (c, &session);
 
 	TEEC_CloseSession(&session);
 }

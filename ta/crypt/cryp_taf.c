@@ -470,6 +470,8 @@ TEE_Result ta_entry_generate_key(uint32_t param_type, TEE_Param params[4])
 				TEE_ATTR_RSA_PUBLIC_EXPONENT,
 				(void *) buf_pe,
 				sizeof(uint64_t));
+	EMSG("key_size = %u, sizeof(attrs) = %zu, attr_count = %u",
+			params[0].value.b, sizeof(attrs), attr_count);
 
 	res = TEE_GenerateKey(o, params[0].value.b, attrs, attr_count);
 	TEE_Free(attrs);

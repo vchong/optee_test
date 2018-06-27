@@ -430,12 +430,15 @@ TEE_Result ta_entry_copy_object_attributes(uint32_t param_type,
 	return TEE_SUCCESS;
 }
 
+#include <utee_defines.h>
 TEE_Result ta_entry_generate_key(uint32_t param_type, TEE_Param params[4])
 {
 	TEE_ObjectHandle o = VAL2HANDLE(params[0].value.a);
 	TEE_Result res;
 	TEE_Attribute *attrs;
 	uint32_t attr_count;
+	uint8_t *buf_pe = NULL;
+	uint64_t be_pe;
 
 	ASSERT_PARAM_TYPE(TEE_PARAM_TYPES
 			  (TEE_PARAM_TYPE_VALUE_INPUT,
@@ -446,6 +449,27 @@ TEE_Result ta_entry_generate_key(uint32_t param_type, TEE_Param params[4])
 			   &attrs, &attr_count);
 	if (res != TEE_SUCCESS)
 		return res;
+
+	attrs = TEE_Malloc(sizeof(TEE_Attribute),
+						TEE_MALLOC_FILL_ZERO);
+	if (!attrs) {
+		EMSG("Failed to allocate memory for attributes");
+		return TEE_ERROR_OUT_OF_MEMORY;
+	}
+	attr_count = 1;
+	buf_pe = TEE_Malloc(sizeof(uint64_t),
+						TEE_MALLOC_FILL_ZERO);
+	if (!buf_pe) {
+		EMSG("Failed to allocate memory for public exponent");
+		return TEE_ERROR_OUT_OF_MEMORY;
+	}
+	//be_pe = TEE_U64_TO_BIG_ENDIAN(65537);
+	be_pe = TEE_U64_TO_BIG_ENDIAN(3);
+	TEE_MemMove(buf_pe, &be_pe, sizeof(uint64_t));
+	TEE_InitRefAttribute(attrs,
+				TEE_ATTR_RSA_PUBLIC_EXPONENT,
+				(void *) buf_pe,
+				sizeof(uint64_t));
 
 	res = TEE_GenerateKey(o, params[0].value.b, attrs, attr_count);
 	TEE_Free(attrs);

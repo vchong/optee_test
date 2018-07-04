@@ -4670,11 +4670,14 @@ static void xtest_tee_test_4007(ADBG_Case_t *c)
 
 	xtest_test_keygen_noparams(c, &session);
 
-	//xtest_test_keygen_dh(c, &session);
+	if (0)
+		xtest_test_keygen_dh(c, &session);
 
-	//xtest_test_keygen_dsa(c, &session);
+	if (0)
+		xtest_test_keygen_dsa(c, &session);
 
-	//xtest_test_keygen_ecc (c, &session);
+	if (0)
+		xtest_test_keygen_ecc (c, &session);
 
 	TEEC_CloseSession(&session);
 }

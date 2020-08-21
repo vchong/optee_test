@@ -1302,8 +1302,8 @@ TEE_Result ta_entry_client_identity(uint32_t param_types, TEE_Param params[4])
 }
 
 #if defined(__clang__) || !defined(__aarch64__) || __GNUC__ >= 8
-__thread int os_test_tls_a;
-__thread int os_test_tls_b = 42;
+int os_test_tls_a;
+int os_test_tls_b = 42;
 
 TEE_Result ta_entry_tls_test_main(void)
 {

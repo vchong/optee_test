@@ -17,8 +17,8 @@ static void __attribute__((constructor)) os_test_shlib_init(void)
 }
 
 #if defined(__clang__) || !defined(__aarch64__) || __GNUC__ >= 8
-__thread int os_test_shlib_tls_a;
-__thread int os_test_shlib_tls_b = 123;
+int os_test_shlib_tls_a;
+int os_test_shlib_tls_b = 123;
 #endif
 
 int os_test_shlib_add(int a, int b)

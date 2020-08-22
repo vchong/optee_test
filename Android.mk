@@ -84,20 +84,6 @@ LOCAL_CFLAGS += -DCFG_PKCS11_TA
 LOCAL_SHARED_LIBRARIES += libckteec
 endif
 
-define my-embed-file
-$(TARGET_OUT_HEADERS)/$(1).h: $(LOCAL_PATH)/$(2)
-	@echo '  GEN     $$@'
-	@$(LOCAL_PATH)/scripts/file_to_c.py --inf $$< --out $$@ --name $(1)
-
-LOCAL_ADDITIONAL_DEPENDENCIES += $(TARGET_OUT_HEADERS)/$(1).h
-
-endef
-
-$(eval $(call my-embed-file,regression_8100_ca_crt,cert/ca.crt))
-$(eval $(call my-embed-file,regression_8100_mid_crt,cert/mid.crt))
-$(eval $(call my-embed-file,regression_8100_my_crt,cert/my.crt))
-$(eval $(call my-embed-file,regression_8100_my_csr,cert/my.csr))
-
 LOCAL_SRC_FILES := $(patsubst %,host/xtest/%,$(srcs))
 
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/host/xtest \
@@ -135,6 +121,48 @@ LOCAL_CFLAGS += -Wno-missing-field-initializers -Wno-format-zero-length
 ## it will be generated after build the optee_os with target BUILD_OPTEE_OS
 ## which is defined in the common ta build mk file included before,
 LOCAL_ADDITIONAL_DEPENDENCIES += $(OPTEE_BIN)
+
+ifeq ($(CFG_GCM_NIST_VECTORS),y)
+GCM_NIST_VECTORS_DECRYPT = gcmDecrypt128 gcmDecrypt192 gcmDecrypt256
+GCM_NIST_VECTORS_ENCRYPT = gcmEncryptExtIV128 gcmEncryptExtIV192 \
+			   gcmEncryptExtIV256
+
+$(TARGET_OUT_HEADERS)/gcmtestvectors.zip:
+	@echo '  DL      $@'
+	@curl https://csrc.nist.gov/csrc/media/projects/cryptographic-algorithm-validation-program/documents/mac/gcmtestvectors.zip -o $@
+
+define my-create-nist-gcm-vectors
+$(TARGET_OUT_HEADERS)/$(1).rsp: $(TARGET_OUT_HEADERS)/gcmtestvectors.zip
+	@echo '  UNZIP   $$@'
+	@unzip -o $$< $$(notdir $$@) -d $$(dir $$@)
+	@touch $$@
+
+$(TARGET_OUT_HEADERS)/$(1).h: $(TARGET_OUT_HEADERS)/$(1).rsp
+	@echo '  GEN     $$@'
+	@$(LOCAL_PATH)/scripts/rsp_to_gcm_test.py --inf $$< --outf $$@ --mode=$(2) \
+		$(if $(filter y,$(CFG_GCM_NIST_VECTORS_LIMITED)),--limited)
+
+LOCAL_ADDITIONAL_DEPENDENCIES += $(TARGET_OUT_HEADERS)/$(1).h
+endef
+
+$(foreach v, $(GCM_NIST_VECTORS_DECRYPT), $(eval $(call \
+	my-create-nist-gcm-vectors,$v,decrypt)))
+$(foreach v, $(GCM_NIST_VECTORS_ENCRYPT), $(eval $(call \
+	my-create-nist-gcm-vectors,$v,encrypt)))
+endif
+
+define my-embed-file
+$(TARGET_OUT_HEADERS)/$(1).h: $(LOCAL_PATH)/$(2)
+	@echo '  GEN     $$@'
+	@$(LOCAL_PATH)/scripts/file_to_c.py --inf $$< --out $$@ --name $(1)
+
+LOCAL_ADDITIONAL_DEPENDENCIES += $(TARGET_OUT_HEADERS)/$(1).h
+endef
+
+$(eval $(call my-embed-file,regression_8100_ca_crt,cert/ca.crt))
+$(eval $(call my-embed-file,regression_8100_mid_crt,cert/mid.crt))
+$(eval $(call my-embed-file,regression_8100_my_crt,cert/my.crt))
+$(eval $(call my-embed-file,regression_8100_my_csr,cert/my.csr))
 
 include $(BUILD_EXECUTABLE)
 

@@ -160,4 +160,4 @@ include $(BUILD_SHARED_LIBRARY)
 ################################################################################
 # Build TAs                                                                    #
 ################################################################################
-include $(LOCAL_PATH)/ta/Android.mk
+#include $(LOCAL_PATH)/ta/Android.mk

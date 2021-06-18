@@ -64,6 +64,33 @@ static CK_MECHANISM cktest_hmac_sha384_mechanism = {
 static CK_MECHANISM cktest_hmac_sha512_mechanism = {
 	CKM_SHA512_HMAC, NULL, 0,
 };
+
+static CK_ULONG cktest_general_mechanism_hmac_len = 8;
+static CK_MECHANISM cktest_hmac_general_md5_mechanism = {
+	CKM_MD5_HMAC, (CK_VOID_PTR)&cktest_general_mechanism_hmac_len,
+	sizeof(CK_ULONG),
+};
+static CK_MECHANISM cktest_hmac_general_sha1_mechanism = {
+	CKM_SHA_1_HMAC, (CK_VOID_PTR)&cktest_general_mechanism_hmac_len,
+	sizeof(CK_ULONG),
+};
+static CK_MECHANISM cktest_hmac_general_sha224_mechanism = {
+	CKM_SHA224_HMAC, (CK_VOID_PTR)&cktest_general_mechanism_hmac_len,
+	sizeof(CK_ULONG),
+};
+static CK_MECHANISM cktest_hmac_general_sha256_mechanism = {
+	CKM_SHA256_HMAC, (CK_VOID_PTR)&cktest_general_mechanism_hmac_len,
+	sizeof(CK_ULONG),
+};
+static CK_MECHANISM cktest_hmac_general_sha384_mechanism = {
+	CKM_SHA384_HMAC, (CK_VOID_PTR)&cktest_general_mechanism_hmac_len,
+	sizeof(CK_ULONG),
+};
+static CK_MECHANISM cktest_hmac_general_sha512_mechanism = {
+	CKM_SHA512_HMAC, (CK_VOID_PTR)&cktest_general_mechanism_hmac_len,
+	sizeof(CK_ULONG),
+};
+
 static CK_MECHANISM cktest_gensecret_keygen_mechanism = {
 	CKM_GENERIC_SECRET_KEY_GEN, NULL, 0,
 };
@@ -1611,6 +1638,33 @@ static const struct mac_test cktest_mac_cases[] = {
 			11, mac_data_sha384_in1, mac_data_sha384_out1, false),
 	CKTEST_MAC_TEST(cktest_hmac_sha512_key, &cktest_hmac_sha512_mechanism,
 			13, mac_data_sha512_in1, mac_data_sha512_out1, false),
+	CKTEST_MAC_TEST(cktest_hmac_md5_key, &cktest_hmac_general_md5_mechanism,
+			4, mac_data_md5_in1, mac_data_md5_truncated_out1,
+			false),
+	CKTEST_MAC_TEST(cktest_hmac_sha1_key,
+			&cktest_hmac_general_sha1_mechanism, 5,
+			mac_data_sha1_in1, mac_data_sha1_truncated_out1,
+			false),
+	CKTEST_MAC_TEST(cktest_hmac_sha224_key,
+			&cktest_hmac_general_sha224_mechanism, 8,
+			mac_data_sha224_in1, mac_data_sha224_truncated_out1,
+			false),
+	CKTEST_MAC_TEST(cktest_hmac_sha256_key1,
+			&cktest_hmac_general_sha256_mechanism, 1,
+			mac_data_sha256_in1, mac_data_sha256_truncated_out1,
+			false),
+	CKTEST_MAC_TEST(cktest_hmac_sha256_key2,
+			&cktest_hmac_general_sha256_mechanism, 7,
+			mac_data_sha256_in2, mac_data_sha256_truncated_out2,
+			false),
+	CKTEST_MAC_TEST(cktest_hmac_sha384_key,
+			&cktest_hmac_general_sha384_mechanism, 11,
+			mac_data_sha384_in1, mac_data_sha384_truncated_out1,
+			false),
+	CKTEST_MAC_TEST(cktest_hmac_sha512_key,
+			&cktest_hmac_general_sha512_mechanism, 13,
+			mac_data_sha512_in1, mac_data_sha512_truncated_out1,
+			false),
 };
 
 static void xtest_pkcs11_test_1008(ADBG_Case_t *c)

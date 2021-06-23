@@ -67,27 +67,33 @@ static CK_MECHANISM cktest_hmac_sha512_mechanism = {
 
 static CK_ULONG cktest_general_mechanism_hmac_len = 8;
 static CK_MECHANISM cktest_hmac_general_md5_mechanism = {
-	CKM_MD5_HMAC, (CK_VOID_PTR)&cktest_general_mechanism_hmac_len,
+	CKM_MD5_HMAC_GENERAL,
+	(CK_VOID_PTR)&cktest_general_mechanism_hmac_len,
 	sizeof(CK_ULONG),
 };
 static CK_MECHANISM cktest_hmac_general_sha1_mechanism = {
-	CKM_SHA_1_HMAC, (CK_VOID_PTR)&cktest_general_mechanism_hmac_len,
+	CKM_SHA_1_HMAC_GENERAL,
+	(CK_VOID_PTR)&cktest_general_mechanism_hmac_len,
 	sizeof(CK_ULONG),
 };
 static CK_MECHANISM cktest_hmac_general_sha224_mechanism = {
-	CKM_SHA224_HMAC, (CK_VOID_PTR)&cktest_general_mechanism_hmac_len,
+	CKM_SHA224_HMAC_GENERAL,
+	(CK_VOID_PTR)&cktest_general_mechanism_hmac_len,
 	sizeof(CK_ULONG),
 };
 static CK_MECHANISM cktest_hmac_general_sha256_mechanism = {
-	CKM_SHA256_HMAC, (CK_VOID_PTR)&cktest_general_mechanism_hmac_len,
+	CKM_SHA256_HMAC_GENERAL,
+	(CK_VOID_PTR)&cktest_general_mechanism_hmac_len,
 	sizeof(CK_ULONG),
 };
 static CK_MECHANISM cktest_hmac_general_sha384_mechanism = {
-	CKM_SHA384_HMAC, (CK_VOID_PTR)&cktest_general_mechanism_hmac_len,
+	CKM_SHA384_HMAC_GENERAL,
+	(CK_VOID_PTR)&cktest_general_mechanism_hmac_len,
 	sizeof(CK_ULONG),
 };
 static CK_MECHANISM cktest_hmac_general_sha512_mechanism = {
-	CKM_SHA512_HMAC, (CK_VOID_PTR)&cktest_general_mechanism_hmac_len,
+	CKM_SHA512_HMAC_GENERAL,
+	(CK_VOID_PTR)&cktest_general_mechanism_hmac_len,
 	sizeof(CK_ULONG),
 };
 

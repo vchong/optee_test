@@ -1632,7 +1632,7 @@ struct mac_test {
 static const struct mac_test cktest_mac_cases[] = {
 	CKTEST_MAC_TEST(cktest_hmac_md5_key, &cktest_hmac_md5_mechanism,
 			4, mac_data_md5_in1, mac_data_md5_out1, false),
-#if 0
+#if 1
 	CKTEST_MAC_TEST(cktest_hmac_sha1_key, &cktest_hmac_sha1_mechanism,
 			5, mac_data_sha1_in1, mac_data_sha1_out1, false),
 	CKTEST_MAC_TEST(cktest_hmac_sha224_key, &cktest_hmac_sha224_mechanism,
@@ -1650,7 +1650,7 @@ static const struct mac_test cktest_mac_cases[] = {
 	CKTEST_MAC_TEST(cktest_hmac_md5_key,
 			&cktest_hmac_general_md5_mechanism, 4,
 			mac_data_md5_in1, mac_data_md5_out1, false),
-#if 0
+#if 1
 	CKTEST_MAC_TEST(cktest_hmac_sha1_key,
 			&cktest_hmac_general_sha1_mechanism, 5,
 			mac_data_sha1_in1, mac_data_sha1_out1, false),
@@ -1675,7 +1675,7 @@ static const struct mac_test cktest_mac_cases[] = {
 			&cktest_hmac_general_md5_mechanism, 4,
 			mac_data_md5_in1, mac_data_md5_truncated_out1,
 			false),
-#if 0
+#if 1
 	CKTEST_MAC_TEST(cktest_hmac_sha1_key,
 			&cktest_hmac_general_sha1_mechanism, 5,
 			mac_data_sha1_in1, mac_data_sha1_truncated_out1,

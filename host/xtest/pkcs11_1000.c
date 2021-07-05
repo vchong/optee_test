@@ -1724,7 +1724,7 @@ static void xtest_pkcs11_test_1008(ADBG_Case_t *c)
 			/* Test too short buffer case */
 			out_size = 1;
 			rv = C_SignFinal(session, out, &out_size);
-			printf("sizeof(CK_ULONG) = %lu\n", sizeof(CK_ULONG));
+			printf("sizeof(CK_ULONG) = %u\n", sizeof(CK_ULONG));
 			printf("out_size = %lu\n", out_size);
 			if (!ADBG_EXPECT_CK_RESULT(c, CKR_BUFFER_TOO_SMALL, rv))
 				goto err_destr_obj;

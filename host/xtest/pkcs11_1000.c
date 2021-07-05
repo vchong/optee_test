@@ -1887,6 +1887,7 @@ err_close_lib:
 ADBG_CASE_DEFINE(pkcs11, 1008, xtest_pkcs11_test_1008,
 		 "PKCS11: Check Compliance of C_Sign - HMAC algorithms");
 
+#if 0
 static bool is_ckm_hmac_general(struct mac_test const *test)
 {
 	switch (test->mechanism->mechanism) {
@@ -1907,6 +1908,7 @@ static bool is_ckm_hmac_general(struct mac_test const *test)
 		return false;
 	}
 }
+#endif
 
 static void xtest_pkcs11_test_1009(ADBG_Case_t *c)
 {

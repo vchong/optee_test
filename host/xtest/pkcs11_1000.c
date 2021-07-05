@@ -2058,6 +2058,20 @@ static void xtest_pkcs11_test_1009(ADBG_Case_t *c)
 				goto err_destr_obj;
 		}
 
+		if (test->in != NULL) {
+			rv = C_VerifyInit(session, test->mechanism, key_handle);
+			if (!ADBG_EXPECT_CK_OK(c, rv))
+				goto err_destr_obj;
+
+			rv = C_Verify(session,
+				      (void *)test->in, test->in_len,
+				      (void *)test->out,
+				      TEE_MAX_HASH_SIZE + 1);
+			if (!ADBG_EXPECT_CK_RESULT(c, CKR_SIGNATURE_LEN_RANGE,
+						   rv))
+				goto err_destr_obj;
+		}
+
 		/* Test 6 verification - Invalid Operation sequence */
 		if (test->in != NULL) {
 			rv = C_VerifyInit(session, test->mechanism, key_handle);

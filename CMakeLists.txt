@@ -21,6 +21,7 @@ add_compile_options (
 	-Wwrite-strings -Werror -fPIC
  	-Wno-missing-field-initializers
 	-Wno-unused-parameter
+	-Wno-unused-variable
 )
 
 find_program(CCACHE_FOUND ccache)

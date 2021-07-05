@@ -142,6 +142,7 @@ CFLAGS += -Wall -Wcast-align -Werror \
 	  -Wmissing-prototypes -Wnested-externs -Wpointer-arith \
 	  -Wshadow -Wstrict-prototypes -Wswitch-default \
 	  -Wwrite-strings -Wno-unused-parameter \
+	  -Wno-unused-variable \
 	  -Wno-declaration-after-statement \
 	  -Wno-missing-field-initializers -Wno-format-zero-length
 

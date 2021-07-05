@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <utee_defines.h>
 #include <util.h>
 
 #include "xtest_test.h"

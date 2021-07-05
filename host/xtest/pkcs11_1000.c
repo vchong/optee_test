@@ -1632,6 +1632,7 @@ struct mac_test {
 static const struct mac_test cktest_mac_cases[] = {
 	CKTEST_MAC_TEST(cktest_hmac_md5_key, &cktest_hmac_md5_mechanism,
 			4, mac_data_md5_in1, mac_data_md5_out1, false),
+#if 0
 	CKTEST_MAC_TEST(cktest_hmac_sha1_key, &cktest_hmac_sha1_mechanism,
 			5, mac_data_sha1_in1, mac_data_sha1_out1, false),
 	CKTEST_MAC_TEST(cktest_hmac_sha224_key, &cktest_hmac_sha224_mechanism,
@@ -1644,10 +1645,12 @@ static const struct mac_test cktest_mac_cases[] = {
 			11, mac_data_sha384_in1, mac_data_sha384_out1, false),
 	CKTEST_MAC_TEST(cktest_hmac_sha512_key, &cktest_hmac_sha512_mechanism,
 			13, mac_data_sha512_in1, mac_data_sha512_out1, false),
+#endif
 #if 1
 	CKTEST_MAC_TEST(cktest_hmac_md5_key,
 			&cktest_hmac_general_md5_mechanism, 4,
 			mac_data_md5_in1, mac_data_md5_out1, false),
+#if 0
 	CKTEST_MAC_TEST(cktest_hmac_sha1_key,
 			&cktest_hmac_general_sha1_mechanism, 5,
 			mac_data_sha1_in1, mac_data_sha1_out1, false),
@@ -1666,11 +1669,13 @@ static const struct mac_test cktest_mac_cases[] = {
 	CKTEST_MAC_TEST(cktest_hmac_sha512_key,
 			&cktest_hmac_general_sha512_mechanism, 13,
 			mac_data_sha512_in1, mac_data_sha512_out1, false),
+#endif
 #else
 	CKTEST_MAC_TEST(cktest_hmac_md5_key,
 			&cktest_hmac_general_md5_mechanism, 4,
 			mac_data_md5_in1, mac_data_md5_truncated_out1,
 			false),
+#if 0
 	CKTEST_MAC_TEST(cktest_hmac_sha1_key,
 			&cktest_hmac_general_sha1_mechanism, 5,
 			mac_data_sha1_in1, mac_data_sha1_truncated_out1,
@@ -1695,6 +1700,7 @@ static const struct mac_test cktest_mac_cases[] = {
 			&cktest_hmac_general_sha512_mechanism, 13,
 			mac_data_sha512_in1, mac_data_sha512_truncated_out1,
 			false),
+#endif
 #endif
 };
 
@@ -1948,7 +1954,8 @@ static void xtest_pkcs11_test_1009(ADBG_Case_t *c)
 				goto err_destr_obj;
 
 			rv = C_VerifyFinal(session,
-					   (void *)test->out, test->out_len);
+					   (void *)test->out,
+					   get_test_out_len(test));
 			if (!ADBG_EXPECT_CK_OK(c, rv))
 				goto err_destr_obj;
 
@@ -1972,14 +1979,15 @@ static void xtest_pkcs11_test_1009(ADBG_Case_t *c)
 				goto err_destr_obj;
 		}
 
-		rv = C_VerifyFinal(session, (void *)test->out, test->out_len);
+		rv = C_VerifyFinal(session, (void *)test->out,
+				   get_test_out_len(test));
 		if (!ADBG_EXPECT_CK_OK(c, rv))
 			goto err_destr_obj;
 
 		/* Error as Operation has already completed */
 		rv = C_Verify(session,
 			      (void *)test->in, test->in_len,
-			      (void *)test->out, test->out_len);
+			      (void *)test->out, get_test_out_len(test));
 		if (!ADBG_EXPECT_CK_RESULT(c, CKR_OPERATION_NOT_INITIALIZED,
 					   rv))
 			goto err_destr_obj;
@@ -1992,14 +2000,16 @@ static void xtest_pkcs11_test_1009(ADBG_Case_t *c)
 
 			rv = C_Verify(session,
 				      (void *)test->in, test->in_len,
-				      (void *)test->out, test->out_len);
+				      (void *)test->out,
+				      get_test_out_len(test));
 			if (!ADBG_EXPECT_CK_OK(c, rv))
 				goto err_destr_obj;
 
 			/* Try calling Verify again */
 			rv = C_Verify(session,
 				      (void *)test->in, test->in_len,
-				      (void *)test->out, test->out_len);
+				      (void *)test->out,
+				      get_test_out_len(test));
 			if (!ADBG_EXPECT_CK_RESULT(c,
 						  CKR_OPERATION_NOT_INITIALIZED,
 						  rv))
@@ -2054,7 +2064,8 @@ static void xtest_pkcs11_test_1009(ADBG_Case_t *c)
 
 			rv = C_Verify(session,
 				      (void *)test->in, test->in_len,
-				      (void *)test->out, test->out_len);
+				      (void *)test->out,
+				      get_test_out_len(test));
 			if (!ADBG_EXPECT_CK_OK(c, rv))
 				goto err_destr_obj;
 

@@ -1644,8 +1644,32 @@ static const struct mac_test cktest_mac_cases[] = {
 			11, mac_data_sha384_in1, mac_data_sha384_out1, false),
 	CKTEST_MAC_TEST(cktest_hmac_sha512_key, &cktest_hmac_sha512_mechanism,
 			13, mac_data_sha512_in1, mac_data_sha512_out1, false),
-	CKTEST_MAC_TEST(cktest_hmac_md5_key, &cktest_hmac_general_md5_mechanism,
-			4, mac_data_md5_in1, mac_data_md5_truncated_out1,
+#if 1
+	CKTEST_MAC_TEST(cktest_hmac_md5_key,
+			&cktest_hmac_general_md5_mechanism, 4,
+			mac_data_md5_in1, mac_data_md5_out1, false),
+	CKTEST_MAC_TEST(cktest_hmac_sha1_key,
+			&cktest_hmac_general_sha1_mechanism, 5,
+			mac_data_sha1_in1, mac_data_sha1_out1, false),
+	CKTEST_MAC_TEST(cktest_hmac_sha224_key,
+			&cktest_hmac_general_sha224_mechanism, 8,
+			mac_data_sha224_in1, mac_data_sha224_out1, false),
+	CKTEST_MAC_TEST(cktest_hmac_sha256_key1,
+			&cktest_hmac_general_sha256_mechanism, 1,
+			mac_data_sha256_in1, mac_data_sha256_out1, false),
+	CKTEST_MAC_TEST(cktest_hmac_sha256_key2,
+			&cktest_hmac_general_sha256_mechanism, 7,
+			mac_data_sha256_in2, mac_data_sha256_out2, false),
+	CKTEST_MAC_TEST(cktest_hmac_sha384_key,
+			&cktest_hmac_general_sha384_mechanism, 11,
+			mac_data_sha384_in1, mac_data_sha384_out1, false),
+	CKTEST_MAC_TEST(cktest_hmac_sha512_key,
+			&cktest_hmac_general_sha512_mechanism, 13,
+			mac_data_sha512_in1, mac_data_sha512_out1, false),
+#else
+	CKTEST_MAC_TEST(cktest_hmac_md5_key,
+			&cktest_hmac_general_md5_mechanism, 4,
+			mac_data_md5_in1, mac_data_md5_truncated_out1,
 			false),
 	CKTEST_MAC_TEST(cktest_hmac_sha1_key,
 			&cktest_hmac_general_sha1_mechanism, 5,
@@ -1671,7 +1695,29 @@ static const struct mac_test cktest_mac_cases[] = {
 			&cktest_hmac_general_sha512_mechanism, 13,
 			mac_data_sha512_in1, mac_data_sha512_truncated_out1,
 			false),
+#endif
 };
+
+static size_t get_test_out_len(struct mac_test const *test)
+{
+	switch (test->mechanism->mechanism) {
+	case CKM_MD5_HMAC_GENERAL:
+	case CKM_SHA_1_HMAC_GENERAL:
+	case CKM_SHA224_HMAC_GENERAL:
+	case CKM_SHA256_HMAC_GENERAL:
+	case CKM_SHA384_HMAC_GENERAL:
+	case CKM_SHA512_HMAC_GENERAL:
+		return (size_t)cktest_general_mechanism_hmac_len;
+	case CKM_MD5_HMAC:
+	case CKM_SHA_1_HMAC:
+	case CKM_SHA224_HMAC:
+	case CKM_SHA256_HMAC:
+	case CKM_SHA384_HMAC:
+	case CKM_SHA512_HMAC:
+	default:
+		return test->out_len;
+	}
+}
 
 static void xtest_pkcs11_test_1008(ADBG_Case_t *c)
 {
@@ -1747,7 +1793,7 @@ static void xtest_pkcs11_test_1008(ADBG_Case_t *c)
 				goto err_destr_obj;
 
 			(void)ADBG_EXPECT_BUFFER(c, test->out,
-						 test->out_len,
+						 get_test_out_len(test),
 						 out, out_size);
 		}
 
@@ -1777,7 +1823,8 @@ static void xtest_pkcs11_test_1008(ADBG_Case_t *c)
 			goto err_destr_obj;
 
 		(void)ADBG_EXPECT_BUFFER(c, test->out,
-					 test->out_len, out, out_size);
+					 get_test_out_len(test), out,
+					 out_size);
 
 		/* Test 3 signature in one shot */
 		if (test->in != NULL) {
@@ -1810,7 +1857,7 @@ static void xtest_pkcs11_test_1008(ADBG_Case_t *c)
 				goto err_destr_obj;
 
 			(void)ADBG_EXPECT_BUFFER(c, test->out,
-						 test->out_len,
+						 get_test_out_len(test),
 						 out, out_size);
 		}
 
@@ -1833,6 +1880,27 @@ err_close_lib:
 }
 ADBG_CASE_DEFINE(pkcs11, 1008, xtest_pkcs11_test_1008,
 		 "PKCS11: Check Compliance of C_Sign - HMAC algorithms");
+
+static bool is_ckm_hmac_general(struct mac_test const *test)
+{
+	switch (test->mechanism->mechanism) {
+	case CKM_MD5_HMAC_GENERAL:
+	case CKM_SHA_1_HMAC_GENERAL:
+	case CKM_SHA224_HMAC_GENERAL:
+	case CKM_SHA256_HMAC_GENERAL:
+	case CKM_SHA384_HMAC_GENERAL:
+	case CKM_SHA512_HMAC_GENERAL:
+		return true;
+	case CKM_MD5_HMAC:
+	case CKM_SHA_1_HMAC:
+	case CKM_SHA224_HMAC:
+	case CKM_SHA256_HMAC:
+	case CKM_SHA384_HMAC:
+	case CKM_SHA512_HMAC:
+	default:
+		return false;
+	}
+}
 
 static void xtest_pkcs11_test_1009(ADBG_Case_t *c)
 {
@@ -1953,7 +2021,10 @@ static void xtest_pkcs11_test_1009(ADBG_Case_t *c)
 				goto err_destr_obj;
 
 			rv = C_VerifyFinal(session, (void *)test->out, 3);
-			if (!ADBG_EXPECT_CK_RESULT(c, CKR_SIGNATURE_LEN_RANGE,
+			if (!ADBG_EXPECT_CK_RESULT(c,
+						   is_ckm_hmac_general(test) ?
+						   CKR_OK :
+						   CKR_SIGNATURE_LEN_RANGE,
 						   rv))
 				goto err_destr_obj;
 		}

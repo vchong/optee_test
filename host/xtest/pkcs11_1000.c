@@ -3405,8 +3405,6 @@ static void xtest_pkcs11_test_1014(ADBG_Case_t *c)
 	CK_BBOOL g_unwrap = CK_FALSE;
 	uint32_t g_len = 0;
 	CK_ATTRIBUTE get_template[] = {
-		{ CKA_LABEL, (CK_UTF8CHAR_PTR)g_label, sizeof(g_label) },
-		{ CKA_ID, (CK_BYTE_PTR)g_id, sizeof(g_id) },
 		{ CKA_DERIVE, &g_derive, sizeof(CK_BBOOL) },
 		{ CKA_SIGN, &g_sign, sizeof(CK_BBOOL) },
 		{ CKA_VERIFY, &g_verify, sizeof(CK_BBOOL) },
@@ -3415,6 +3413,8 @@ static void xtest_pkcs11_test_1014(ADBG_Case_t *c)
 		{ CKA_WRAP, &g_wrap, sizeof(CK_BBOOL) },
 		{ CKA_UNWRAP, &g_unwrap, sizeof(CK_BBOOL) },
 		{ CKA_VALUE_LEN, &g_len, sizeof(CK_ULONG) },
+		{ CKA_LABEL, (CK_UTF8CHAR_PTR)g_label, sizeof(g_label) },
+		{ CKA_ID, (CK_BYTE_PTR)g_id, sizeof(g_id) },
 	};
 	CK_ATTRIBUTE set_template[] = {
 		{ CKA_LABEL, (CK_UTF8CHAR_PTR)new_label, strlen(new_label) },
@@ -3488,7 +3488,7 @@ static void xtest_pkcs11_test_1014(ADBG_Case_t *c)
 				 ARRAY_SIZE(get_template));
 	if (!ADBG_EXPECT_CK_OK(c, rv) ||
 	    !ADBG_EXPECT_BUFFER(c, label, strlen(label), g_label,
-				get_template[0].ulValueLen) ||
+				get_template[8].ulValueLen) ||
 	    !ADBG_EXPECT_COMPARE_UNSIGNED(c, g_derive, ==, CK_FALSE) ||
 	    !ADBG_EXPECT_COMPARE_UNSIGNED(c, g_wrap, ==, CK_FALSE) ||
 	    !ADBG_EXPECT_COMPARE_UNSIGNED(c, g_unwrap, ==, CK_FALSE) ||
@@ -3497,7 +3497,7 @@ static void xtest_pkcs11_test_1014(ADBG_Case_t *c)
 	    !ADBG_EXPECT_COMPARE_UNSIGNED(c, g_sign, ==, CK_TRUE) ||
 	    !ADBG_EXPECT_COMPARE_UNSIGNED(c, g_verify, ==, CK_TRUE) ||
 	    !ADBG_EXPECT_COMPARE_UNSIGNED(c, g_len, ==, 16) ||
-	    !ADBG_EXPECT_COMPARE_UNSIGNED(c, get_template[1].ulValueLen, ==, 0))
+	    !ADBG_EXPECT_COMPARE_UNSIGNED(c, get_template[9].ulValueLen, ==, 0))
 		goto out;
 
 	rv = C_SetAttributeValue(session, obj_hdl, set_template,
@@ -3505,15 +3505,15 @@ static void xtest_pkcs11_test_1014(ADBG_Case_t *c)
 	if (!ADBG_EXPECT_CK_OK(c, rv))
 		goto out;
 
-	get_template[0].ulValueLen = sizeof(g_label);
-	get_template[1].ulValueLen = sizeof(g_id);
+	get_template[8].ulValueLen = sizeof(g_label);
+	get_template[9].ulValueLen = sizeof(g_id);
 	rv = C_GetAttributeValue(session, obj_hdl, get_template,
 				 ARRAY_SIZE(get_template));
 	if (!ADBG_EXPECT_CK_OK(c, rv) ||
 	    !ADBG_EXPECT_BUFFER(c, new_label, strlen(new_label), g_label,
-				get_template[0].ulValueLen) ||
+				get_template[8].ulValueLen) ||
 	    !ADBG_EXPECT_BUFFER(c, id, strlen(id), g_id,
-				get_template[1].ulValueLen) ||
+				get_template[9].ulValueLen) ||
 	    !ADBG_EXPECT_COMPARE_UNSIGNED(c, g_derive, ==, CK_TRUE) ||
 	    !ADBG_EXPECT_COMPARE_UNSIGNED(c, g_wrap, ==, CK_TRUE) ||
 	    !ADBG_EXPECT_COMPARE_UNSIGNED(c, g_unwrap, ==, CK_TRUE) ||

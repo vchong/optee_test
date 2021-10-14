@@ -3507,10 +3507,6 @@ static void xtest_pkcs11_test_1014(ADBG_Case_t *c)
 
 	get_template[0].ulValueLen = sizeof(g_label);
 	get_template[1].ulValueLen = sizeof(g_id);
-	printf("%lu\n", get_template[0].ulValueLen);
-	printf("%lu\n", get_template[1].ulValueLen);
-	get_template[0].ulValueLen = 100;
-	get_template[1].ulValueLen = 100;
 	rv = C_GetAttributeValue(session, obj_hdl, get_template,
 				 ARRAY_SIZE(get_template));
 	if (!ADBG_EXPECT_CK_OK(c, rv) ||
